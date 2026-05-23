@@ -1,8 +1,10 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
+import { addHistory } from "@/lib/history";
 import { AppShell } from "@/components/AppShell";
 import { ArrowLeft, Loader2, Lock, Play } from "lucide-react";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/drama/$id")({
   component: DramaPage,
@@ -15,6 +17,16 @@ function DramaPage() {
     queryKey: ["drama", id],
     queryFn: () => api.drama(id),
   });
+
+  useEffect(() => {
+    if (q.data) {
+      addHistory({
+        shortPlayId: id,
+        shortPlayName: q.data.shortPlayName ?? "",
+        shortPlayCover: q.data.shortPlayCover ?? "",
+      });
+    }
+  }, [q.data, id]);
 
   return (
     <AppShell>

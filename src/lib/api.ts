@@ -44,6 +44,7 @@ export interface Episode {
 }
 
 export interface DramaDetail {
+  shortPlayName?: string;
   shortPlayCover: string;
   shortPlayEpisodeList: Episode[];
   language: string;
