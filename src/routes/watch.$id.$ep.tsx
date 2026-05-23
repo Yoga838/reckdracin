@@ -1,7 +1,9 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { api, getToken } from "@/lib/api";
+import { addHistory } from "@/lib/history";
 import { ArrowLeft, Loader2, Lock } from "lucide-react";
+import { useEffect } from "react";
 
 export const Route = createFileRoute("/watch/$id/$ep")({
   component: WatchPage,
@@ -18,6 +20,18 @@ function WatchPage() {
   });
 
   const episode = drama.data?.shortPlayEpisodeList.find((e) => e.episodeNo === epNo);
+
+  // Record history when we have drama data
+  useEffect(() => {
+    if (drama.data) {
+      addHistory({
+        shortPlayId: id,
+        shortPlayName: drama.data.shortPlayName ?? "",
+        shortPlayCover: drama.data.shortPlayCover ?? "",
+        episodeNo: epNo,
+      });
+    }
+  }, [drama.data, id, epNo]);
 
   // Fetch via watch endpoint when we lack a voucher (locked or missing)
   const needsFetch = drama.data && (!episode?.playVoucher || episode?.isLock);
