@@ -1,11 +1,12 @@
 import { Link, useLocation } from "@tanstack/react-router";
-import { Home, Compass, Search, Settings } from "lucide-react";
+import { Home, Compass, Search, Settings, Clock } from "lucide-react";
 import type { ReactNode } from "react";
 
 const tabs = [
   { to: "/", label: "Home", icon: Home },
   { to: "/browse", label: "Browse", icon: Compass },
   { to: "/search", label: "Search", icon: Search },
+  { to: "/history", label: "History", icon: Clock },
   { to: "/settings", label: "Settings", icon: Settings },
 ] as const;
 
@@ -15,7 +16,7 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="mx-auto flex min-h-screen max-w-md flex-col bg-background">
       <main className="flex-1 pb-20">{children}</main>
       <nav className="fixed inset-x-0 bottom-0 z-40 mx-auto max-w-md border-t border-border bg-card/95 backdrop-blur">
-        <ul className="grid grid-cols-4">
+        <ul className="grid grid-cols-5">
           {tabs.map((t) => {
             const active =
               t.to === "/"
