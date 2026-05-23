@@ -1,8 +1,10 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery, useQueries } from "@tanstack/react-query";
 import { api, type HomeSection } from "@/lib/api";
+import { getHistory } from "@/lib/history";
 import { AppShell, PosterCard } from "@/components/AppShell";
-import { ChevronRight, Loader2 } from "lucide-react";
+import { ChevronRight, Clock, Loader2 } from "lucide-react";
+import { useMemo } from "react";
 
 export const Route = createFileRoute("/")({
   component: HomePage,
@@ -28,6 +30,15 @@ function HomePage() {
   const firstLoading = sections[0].isLoading;
   const hero = loaded[0]?.contentInfos[0];
 
+  const history = useMemo(() => getHistory().slice(0, 10), []);
+  const historyMap = useMemo(() => {
+    const map = new Map<string, (typeof history)[0]>();
+    for (const h of history) {
+      if (!map.has(h.shortPlayId)) map.set(h.shortPlayId, h);
+    }
+    return Array.from(map.values());
+  }, [history]);
+
   return (
     <AppShell>
       <header className="sticky top-0 z-30 flex items-center justify-between bg-background/80 px-4 py-3 backdrop-blur">
@@ -43,6 +54,36 @@ function HomePage() {
         <div className="flex justify-center py-20">
           <Loader2 className="h-6 w-6 animate-spin text-primary" />
         </div>
+      )}
+
+      {historyMap.length > 0 && (
+        <section className="mb-6">
+          <div className="flex items-center justify-between px-4 pb-3">
+            <h2 className="flex items-center gap-1.5 text-base font-semibold">
+              <Clock className="h-4 w-4 text-primary" />
+              Continue Watching
+            </h2>
+            <Link to="/history" className="flex items-center text-xs text-muted-foreground">
+              More <ChevronRight className="h-3 w-3" />
+            </Link>
+          </div>
+          <div className="scrollbar-hide flex gap-3 overflow-x-auto px-4 pb-1">
+            {historyMap.map((h) => (
+              <Link
+                to="/drama/$id"
+                params={{ id: h.shortPlayId }}
+                key={h.shortPlayId}
+                className="w-28 shrink-0"
+              >
+                <PosterCard
+                  cover={h.shortPlayCover}
+                  title={h.shortPlayName}
+                  label={h.episodeNo ? `EP ${h.episodeNo}` : undefined}
+                />
+              </Link>
+            ))}
+          </div>
+        </section>
       )}
 
       {hero && (
