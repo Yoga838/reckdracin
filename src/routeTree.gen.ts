@@ -9,38 +9,128 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as SettingsRouteImport } from './routes/settings'
+import { Route as SearchRouteImport } from './routes/search'
+import { Route as BrowseRouteImport } from './routes/browse'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DramaIdRouteImport } from './routes/drama.$id'
+import { Route as WatchIdEpRouteImport } from './routes/watch.$id.$ep'
 
+const SettingsRoute = SettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SearchRoute = SearchRouteImport.update({
+  id: '/search',
+  path: '/search',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrowseRoute = BrowseRouteImport.update({
+  id: '/browse',
+  path: '/browse',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DramaIdRoute = DramaIdRouteImport.update({
+  id: '/drama/$id',
+  path: '/drama/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WatchIdEpRoute = WatchIdEpRouteImport.update({
+  id: '/watch/$id/$ep',
+  path: '/watch/$id/$ep',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/browse': typeof BrowseRoute
+  '/search': typeof SearchRoute
+  '/settings': typeof SettingsRoute
+  '/drama/$id': typeof DramaIdRoute
+  '/watch/$id/$ep': typeof WatchIdEpRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/browse': typeof BrowseRoute
+  '/search': typeof SearchRoute
+  '/settings': typeof SettingsRoute
+  '/drama/$id': typeof DramaIdRoute
+  '/watch/$id/$ep': typeof WatchIdEpRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/browse': typeof BrowseRoute
+  '/search': typeof SearchRoute
+  '/settings': typeof SettingsRoute
+  '/drama/$id': typeof DramaIdRoute
+  '/watch/$id/$ep': typeof WatchIdEpRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/browse'
+    | '/search'
+    | '/settings'
+    | '/drama/$id'
+    | '/watch/$id/$ep'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/browse'
+    | '/search'
+    | '/settings'
+    | '/drama/$id'
+    | '/watch/$id/$ep'
+  id:
+    | '__root__'
+    | '/'
+    | '/browse'
+    | '/search'
+    | '/settings'
+    | '/drama/$id'
+    | '/watch/$id/$ep'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  BrowseRoute: typeof BrowseRoute
+  SearchRoute: typeof SearchRoute
+  SettingsRoute: typeof SettingsRoute
+  DramaIdRoute: typeof DramaIdRoute
+  WatchIdEpRoute: typeof WatchIdEpRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/settings': {
+      id: '/settings'
+      path: '/settings'
+      fullPath: '/settings'
+      preLoaderRoute: typeof SettingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/search': {
+      id: '/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof SearchRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/browse': {
+      id: '/browse'
+      path: '/browse'
+      fullPath: '/browse'
+      preLoaderRoute: typeof BrowseRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +138,30 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/drama/$id': {
+      id: '/drama/$id'
+      path: '/drama/$id'
+      fullPath: '/drama/$id'
+      preLoaderRoute: typeof DramaIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/watch/$id/$ep': {
+      id: '/watch/$id/$ep'
+      path: '/watch/$id/$ep'
+      fullPath: '/watch/$id/$ep'
+      preLoaderRoute: typeof WatchIdEpRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  BrowseRoute: BrowseRoute,
+  SearchRoute: SearchRoute,
+  SettingsRoute: SettingsRoute,
+  DramaIdRoute: DramaIdRoute,
+  WatchIdEpRoute: WatchIdEpRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
