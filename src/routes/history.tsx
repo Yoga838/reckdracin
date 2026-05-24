@@ -6,7 +6,7 @@ import { useState, useCallback } from "react";
 
 export const Route = createFileRoute("/history")({
   component: HistoryPage,
-  head: () => ({ meta: [{ title: "History — NetShort" }] }),
+  head: () => ({ meta: [{ title: "History — Reckdracin" }] }),
 });
 
 function HistoryPage() {

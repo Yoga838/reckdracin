@@ -1,6 +1,6 @@
 const BASE = "https://netshort.dramabos.online";
 
-export const DEFAULT_LANG = "id";
+export const DEFAULT_LANG = "in";
 
 async function get<T>(path: string): Promise<T> {
   const res = await fetch(`${BASE}${path}`);

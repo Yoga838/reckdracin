@@ -7,7 +7,7 @@ import { useEffect, useRef } from "react";
 
 export const Route = createFileRoute("/browse")({
   component: BrowsePage,
-  head: () => ({ meta: [{ title: "Browse — NetShort" }] }),
+  head: () => ({ meta: [{ title: "Browse — Reckdracin" }] }),
 });
 
 function BrowsePage() {
