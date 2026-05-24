@@ -72,14 +72,18 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Lovable App" },
-      { name: "description", content: "Lovable Generated Project" },
+      { title: "Reckdracin" },
+      { name: "description", content: "free dracin app" },
       { name: "author", content: "Lovable" },
-      { property: "og:title", content: "Lovable App" },
-      { property: "og:description", content: "Lovable Generated Project" },
+      { property: "og:title", content: "Reckdracin" },
+      { property: "og:description", content: "free dracin app" },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Reckdracin" },
+      { name: "twitter:description", content: "free dracin app" },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/975aa17a-0dd4-4379-af92-b3df25085b1e/id-preview-1be3fd11--81a49333-9a2c-48fe-b89c-9fcb696e2334.lovable.app-1779554748534.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/975aa17a-0dd4-4379-af92-b3df25085b1e/id-preview-1be3fd11--81a49333-9a2c-48fe-b89c-9fcb696e2334.lovable.app-1779554748534.png" },
     ],
     links: [
       {
