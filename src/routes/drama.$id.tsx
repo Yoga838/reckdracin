@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { addHistory } from "@/lib/history";
 import { AppShell } from "@/components/AppShell";
-import { ArrowLeft, Loader2, Lock, Play } from "lucide-react";
+import { ArrowLeft, Loader2, Play } from "lucide-react";
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/drama/$id")({

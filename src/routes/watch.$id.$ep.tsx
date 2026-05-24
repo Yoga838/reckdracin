@@ -1,8 +1,8 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { api, getToken } from "@/lib/api";
+import { api } from "@/lib/api";
 import { addHistory } from "@/lib/history";
-import { ArrowLeft, Loader2, Lock } from "lucide-react";
+import { ArrowLeft, Loader2 } from "lucide-react";
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/watch/$id/$ep")({
