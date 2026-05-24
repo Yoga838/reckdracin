@@ -9,7 +9,6 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SearchRouteImport } from './routes/search'
 import { Route as HistoryRouteImport } from './routes/history'
 import { Route as BrowseRouteImport } from './routes/browse'
@@ -17,11 +16,6 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as DramaIdRouteImport } from './routes/drama.$id'
 import { Route as WatchIdEpRouteImport } from './routes/watch.$id.$ep'
 
-const SettingsRoute = SettingsRouteImport.update({
-  id: '/settings',
-  path: '/settings',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const SearchRoute = SearchRouteImport.update({
   id: '/search',
   path: '/search',
@@ -58,7 +52,6 @@ export interface FileRoutesByFullPath {
   '/browse': typeof BrowseRoute
   '/history': typeof HistoryRoute
   '/search': typeof SearchRoute
-  '/settings': typeof SettingsRoute
   '/drama/$id': typeof DramaIdRoute
   '/watch/$id/$ep': typeof WatchIdEpRoute
 }
@@ -67,7 +60,6 @@ export interface FileRoutesByTo {
   '/browse': typeof BrowseRoute
   '/history': typeof HistoryRoute
   '/search': typeof SearchRoute
-  '/settings': typeof SettingsRoute
   '/drama/$id': typeof DramaIdRoute
   '/watch/$id/$ep': typeof WatchIdEpRoute
 }
@@ -77,7 +69,6 @@ export interface FileRoutesById {
   '/browse': typeof BrowseRoute
   '/history': typeof HistoryRoute
   '/search': typeof SearchRoute
-  '/settings': typeof SettingsRoute
   '/drama/$id': typeof DramaIdRoute
   '/watch/$id/$ep': typeof WatchIdEpRoute
 }
@@ -88,25 +79,16 @@ export interface FileRouteTypes {
     | '/browse'
     | '/history'
     | '/search'
-    | '/settings'
     | '/drama/$id'
     | '/watch/$id/$ep'
   fileRoutesByTo: FileRoutesByTo
-  to:
-    | '/'
-    | '/browse'
-    | '/history'
-    | '/search'
-    | '/settings'
-    | '/drama/$id'
-    | '/watch/$id/$ep'
+  to: '/' | '/browse' | '/history' | '/search' | '/drama/$id' | '/watch/$id/$ep'
   id:
     | '__root__'
     | '/'
     | '/browse'
     | '/history'
     | '/search'
-    | '/settings'
     | '/drama/$id'
     | '/watch/$id/$ep'
   fileRoutesById: FileRoutesById
@@ -116,20 +98,12 @@ export interface RootRouteChildren {
   BrowseRoute: typeof BrowseRoute
   HistoryRoute: typeof HistoryRoute
   SearchRoute: typeof SearchRoute
-  SettingsRoute: typeof SettingsRoute
   DramaIdRoute: typeof DramaIdRoute
   WatchIdEpRoute: typeof WatchIdEpRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/settings': {
-      id: '/settings'
-      path: '/settings'
-      fullPath: '/settings'
-      preLoaderRoute: typeof SettingsRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/search': {
       id: '/search'
       path: '/search'
@@ -180,10 +154,19 @@ const rootRouteChildren: RootRouteChildren = {
   BrowseRoute: BrowseRoute,
   HistoryRoute: HistoryRoute,
   SearchRoute: SearchRoute,
-  SettingsRoute: SettingsRoute,
   DramaIdRoute: DramaIdRoute,
   WatchIdEpRoute: WatchIdEpRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
