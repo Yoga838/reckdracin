@@ -50,7 +50,7 @@ function WatchPage() {
       </header>
 
       <div className="relative flex aspect-[9/16] w-full items-center justify-center bg-black">
-        {drama.isLoading || (needsFetch && watchQ.isLoading) ? (
+        {drama.isLoading ? (
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         ) : videoUrl ? (
           <video
@@ -62,23 +62,6 @@ function WatchPage() {
             poster={episode?.episodeCover}
             className="h-full w-full object-contain"
           />
-        ) : locked ? (
-          <div className="flex flex-col items-center gap-3 px-6 text-center">
-            <Lock className="h-10 w-10 text-primary" />
-            <p className="text-sm text-white">This episode is locked.</p>
-            {!token ? (
-              <Link
-                to="/settings"
-                className="rounded-full bg-primary px-4 py-2 text-xs font-semibold text-primary-foreground"
-              >
-                Add your token
-              </Link>
-            ) : (
-              <p className="text-xs text-white/60">
-                {watchQ.error instanceof Error ? watchQ.error.message : "Token invalid or no coins."}
-              </p>
-            )}
-          </div>
         ) : (
           <p className="text-sm text-white/60">No video available.</p>
         )}
@@ -101,7 +84,6 @@ function WatchPage() {
                 }`}
               >
                 {e.episodeNo}
-                {e.isLock && <Lock className="absolute right-0.5 top-0.5 h-2.5 w-2.5" />}
               </Link>
             );
           })}
