@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { api } from "@/lib/api";
 import { addHistory } from "@/lib/history";
 import { AppShell } from "@/components/AppShell";
-import { ArrowLeft, Loader2, Lock, Play } from "lucide-react";
+import { ArrowLeft, Loader2, Play } from "lucide-react";
 import { useEffect } from "react";
 
 export const Route = createFileRoute("/drama/$id")({
@@ -73,9 +73,6 @@ function DramaPage() {
                   className="relative flex aspect-square items-center justify-center rounded-lg bg-card text-sm font-medium transition hover:bg-accent"
                 >
                   {ep.episodeNo}
-                  {ep.isLock && (
-                    <Lock className="absolute right-1 top-1 h-3 w-3 text-primary" />
-                  )}
                 </Link>
               ))}
             </div>
