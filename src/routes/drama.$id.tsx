@@ -73,9 +73,6 @@ function DramaPage() {
                   className="relative flex aspect-square items-center justify-center rounded-lg bg-card text-sm font-medium transition hover:bg-accent"
                 >
                   {ep.episodeNo}
-                  {ep.isLock && (
-                    <Lock className="absolute right-1 top-1 h-3 w-3 text-primary" />
-                  )}
                 </Link>
               ))}
             </div>

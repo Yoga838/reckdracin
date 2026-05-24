@@ -33,18 +33,7 @@ function WatchPage() {
     }
   }, [drama.data, id, epNo]);
 
-  // Fetch via watch endpoint when we lack a voucher (locked or missing)
-  const needsFetch = drama.data && (!episode?.playVoucher || episode?.isLock);
-  const token = getToken();
-  const watchQ = useQuery({
-    queryKey: ["watch", id, epNo, token],
-    queryFn: () => api.watch(id, epNo, token),
-    enabled: !!needsFetch && !!token,
-    retry: false,
-  });
-
-  const videoUrl = episode?.playVoucher || watchQ.data?.playVoucher;
-  const locked = episode?.isLock && !videoUrl;
+  const videoUrl = episode?.playVoucher;
 
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col bg-black">
