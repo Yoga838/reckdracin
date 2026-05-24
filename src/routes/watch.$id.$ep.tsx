@@ -56,7 +56,7 @@ function WatchPage() {
       </header>
 
       <div className="relative flex aspect-[9/16] w-full items-center justify-center bg-black">
-        {drama.isLoading ? (
+        {drama.isLoading || watchQ.isLoading ? (
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         ) : videoUrl ? (
           <video
