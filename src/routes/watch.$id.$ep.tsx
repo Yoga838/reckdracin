@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { api } from "@/lib/api";
+import { api, getToken } from "@/lib/api";
 import { addHistory } from "@/lib/history";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useEffect } from "react";
@@ -19,8 +19,15 @@ function WatchPage() {
     queryFn: () => api.drama(id),
   });
 
-  const episode = drama.data?.shortPlayEpisodeList.find((e) => e.episodeNo === epNo);
+  // Fetch the actual episode data (with playVoucher) via the watch endpoint
+  const watchQuery = useQuery({
+    queryKey: ["watch", id, epNo],
+    queryFn: () => api.watch(id, epNo, getToken()),
+    enabled: !!drama.data, // only fetch after we have drama data
+  });
 
+  const episode = watchQuery.data ?? drama.data?.shortPlayEpisodeList.find((e) => e.episodeNo === epNo);
+  console.log(episode);
   // Record history when we have drama data
   useEffect(() => {
     if (drama.data) {
@@ -33,8 +40,8 @@ function WatchPage() {
     }
   }, [drama.data, id, epNo]);
 
-  const videoUrl = episode?.playVoucher;
-
+  const videoUrl = episode?.videoUrl;
+  
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col bg-black">
       <header className="absolute inset-x-0 top-0 z-10 flex items-center justify-between p-4">
@@ -50,7 +57,7 @@ function WatchPage() {
       </header>
 
       <div className="relative flex aspect-[9/16] w-full items-center justify-center bg-black">
-        {drama.isLoading ? (
+        {drama.isLoading || watchQuery.isLoading ? (
           <Loader2 className="h-8 w-8 animate-spin text-primary" />
         ) : videoUrl ? (
           <video
