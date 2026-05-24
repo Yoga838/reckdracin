@@ -84,10 +84,11 @@ export const api = {
     ),
 };
 
+const HARDCODED_TOKEN = "4CFB9A999639A6742E29B87A142E18C5";
+
 export function getToken(): string {
-  if (typeof window === "undefined") return "";
-  return localStorage.getItem("ns_token") || "";
+  return HARDCODED_TOKEN;
 }
-export function setToken(t: string) {
-  localStorage.setItem("ns_token", t);
+export function setToken(_t: string) {
+  // Token is hardcoded; setToken is a no-op.
 }
