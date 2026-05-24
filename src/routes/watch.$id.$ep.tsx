@@ -1,6 +1,6 @@
 import { createFileRoute, Link, useRouter } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
-import { api } from "@/lib/api";
+import { api, getToken } from "@/lib/api";
 import { addHistory } from "@/lib/history";
 import { ArrowLeft, Loader2 } from "lucide-react";
 import { useEffect } from "react";
@@ -21,6 +21,12 @@ function WatchPage() {
 
   const episode = drama.data?.shortPlayEpisodeList.find((e) => e.episodeNo === epNo);
 
+  const watchQ = useQuery({
+    queryKey: ["watch", id, epNo],
+    queryFn: () => api.watch(id, epNo, getToken()),
+    enabled: !!episode && !episode.playVoucher,
+  });
+
   // Record history when we have drama data
   useEffect(() => {
     if (drama.data) {
@@ -33,7 +39,7 @@ function WatchPage() {
     }
   }, [drama.data, id, epNo]);
 
-  const videoUrl = episode?.playVoucher;
+  const videoUrl = episode?.playVoucher ?? watchQ.data?.playVoucher;
 
   return (
     <div className="mx-auto flex min-h-screen max-w-md flex-col bg-black">
