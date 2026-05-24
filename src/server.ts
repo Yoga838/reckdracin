@@ -8,29 +8,19 @@ type ServerEntry = {
 };
 
 let serverEntryPromise: Promise<ServerEntry> | undefined;
-let initError: Error | null = null;
 
 async function getServerEntry(): Promise<ServerEntry> {
-  if (initError) {
-    throw initError;
-  }
-
   if (!serverEntryPromise) {
-    serverEntryPromise = import("@tanstack/react-start/server-entry")
-      .then((m) => ((m as { default?: ServerEntry }).default ?? (m as unknown as ServerEntry)))
-      .catch((error) => {
-        initError = error;
-        console.error("[Server Init] Failed to load TanStack Start server entry:", error);
-        throw new Error("Server initialization failed");
-      });
+    serverEntryPromise = import("@tanstack/react-start/server-entry").then(
+      (m) => ((m as { default?: ServerEntry }).default ?? (m as unknown as ServerEntry)),
+    );
   }
-
   return serverEntryPromise;
 }
 
-function brandedErrorResponse(status: number = 500): Response {
+function brandedErrorResponse(): Response {
   return new Response(renderErrorPage(), {
-    status,
+    status: 500,
     headers: { "content-type": "text/html; charset=utf-8" },
   });
 }
@@ -67,51 +57,24 @@ async function normalizeCatastrophicSsrResponse(response: Response): Promise<Res
   const contentType = response.headers.get("content-type") ?? "";
   if (!contentType.includes("application/json")) return response;
 
-  try {
-    const body = await response.clone().text();
-    if (!isCatastrophicSsrErrorBody(body, response.status)) {
-      return response;
-    }
-
-    const capturedError = consumeLastCapturedError();
-    const errorMsg = capturedError?.message || `h3 swallowed SSR error: ${body}`;
-    console.error("[SSR Catastrophic Error]", {
-      message: errorMsg,
-      status: response.status,
-      timestamp: new Date().toISOString(),
-    });
-
-    return brandedErrorResponse(500);
-  } catch (error) {
-    console.error("[Response Normalization Error]", error);
+  const body = await response.clone().text();
+  if (!isCatastrophicSsrErrorBody(body, response.status)) {
     return response;
   }
+
+  console.error(consumeLastCapturedError() ?? new Error(`h3 swallowed SSR error: ${body}`));
+  return brandedErrorResponse();
 }
 
 export default {
-  async fetch(request: Request, env: unknown, ctx: unknown): Promise<Response> {
-    const requestId = Math.random().toString(36).substr(2, 9);
-    const startTime = Date.now();
-
+  async fetch(request: Request, env: unknown, ctx: unknown) {
     try {
-      const url = new URL(request.url);
-      console.log(`[${requestId}] ${request.method} ${url.pathname}${url.search}`);
-
       const handler = await getServerEntry();
       const response = await handler.fetch(request, env, ctx);
-
-      const duration = Date.now() - startTime;
-      console.log(`[${requestId}] Response ${response.status} in ${duration}ms`);
-
       return await normalizeCatastrophicSsrResponse(response);
     } catch (error) {
-      const duration = Date.now() - startTime;
-      console.error(`[${requestId}] Error in ${duration}ms:`, {
-        message: error instanceof Error ? error.message : String(error),
-        stack: error instanceof Error ? error.stack : undefined,
-      });
-
-      return brandedErrorResponse(500);
+      console.error(error);
+      return brandedErrorResponse();
     }
   },
 };

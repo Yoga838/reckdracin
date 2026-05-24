@@ -1,6 +1,6 @@
 const BASE = "https://netshort.dramabos.online";
 
-export const DEFAULT_LANG = "id";
+export const DEFAULT_LANG = "in";
 
 async function get<T>(path: string): Promise<T> {
   const res = await fetch(`${BASE}${path}`);
@@ -77,7 +77,7 @@ export const api = {
   drama: (id: string, lang = DEFAULT_LANG) =>
     get<DramaDetail>(`/api/drama/${id}?lang=${lang}`),
   watch: (id: string, ep: number, token: string, lang = DEFAULT_LANG) =>
-    get<Episode>(`/api/watch/${id}/${ep}?lang=${lang}&code=${encodeURIComponent(token)}`),
+    get<Episode>(`/api/watch/${id}/${ep}?lang=${lang}&token=${encodeURIComponent(token)}`),
   search: (q: string, page = 1, lang = DEFAULT_LANG) =>
     get<{ searchCodeSearchResult: ContentItem[] }>(
       `/api/search?lang=${lang}&q=${encodeURIComponent(q)}&page=${page}`,

@@ -10,7 +10,7 @@ export const Route = createFileRoute("/")({
   component: HomePage,
   head: () => ({
     meta: [
-      { title: "NetShort — Short Dramas" },
+      { title: "Reckdracin — Short Dramas" },
       { name: "description", content: "Tonton drama pendek terbaik dari berbagai genre." },
     ],
   }),
